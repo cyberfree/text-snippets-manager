@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Estensione Snippet - Tutti i Tipi di Editor</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    
+    h1 {
+      color: #333;
+      border-bottom: 3px solid #667eea;
+      padding-bottom: 10px;
+    }
+    
+    .test-section {
+      background: white;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .test-section h2 {
+      margin-top: 0;
+      color: #667eea;
+    }
+    
+    .status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+    
+    .status.should-work {
+      background: #4caf50;
+      color: white;
+    }
+    
+    .status.may-work {
+      background: #ff9800;
+      color: white;
+    }
+    
+    .status.wont-work {
+      background: #f44336;
+      color: white;
+    }
+    
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: monospace;
+      margin-top: 8px;
+      box-sizing: border-box;
+    }
+    
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    
+    .contenteditable {
+      width: 100%;
+      min-height: 100px;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 4px;
+      background: white;
+      margin-top: 8px;
+      font-family: monospace;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    
+    .contenteditable:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    
+    .contenteditable:empty:before {
+      content: attr(data-placeholder);
+      color: #999;
+    }
+    
+    .gemini-like {
+      border: 2px solid #4285f4;
+      background: #f8f9fa;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    }
+    
+    .react-like {
+      border: 2px solid #61dafb;
+      background: #282c34;
+      color: #61dafb;
+    }
+    
+    .instructions {
+      background: #e3f2fd;
+      padding: 15px;
+      border-left: 4px solid #2196f3;
+      margin: 20px 0;
+    }
+    
+    .instructions h3 {
+      margin-top: 0;
+      color: #1976d2;
+    }
+    
+    code {
+      background: #f5f5f5;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 Test Page - Estensione Snippet</h1>
+  
+  <div class="instructions">
+    <h3>📋 Come testare:</h3>
+    <ol>
+      <li>Installa l'estensione <strong>v2.4</strong></li>
+      <li>Crea uno snippet di test (es. "TEST SNIPPET")</li>
+      <li>Clicca in ogni campo qui sotto</li>
+      <li>Usa <code>Ctrl+Shift+V</code> o tasto destro → Incolla snippet</li>
+      <li>Verifica se il testo appare correttamente</li>
+    </ol>
+    <p><strong>Risultati attesi:</strong> Tutti i campi dovrebbero funzionare tranne "Non Supportato"</p>
+  </div>
+
+  <!-- Test 1: Textarea standard -->
+  <div class="test-section">
+    <h2>1. Textarea Standard <span class="status should-work">✅ DEVE FUNZIONARE</span></h2>
+    <p>Gmail, form standard, commenti</p>
+    <textarea placeholder="Clicca qui e prova a incollare uno snippet..."></textarea>
+  </div>
+
+  <!-- Test 2: Input text -->
+  <div class="test-section">
+    <h2>2. Input Text <span class="status should-work">✅ DEVE FUNZIONARE</span></h2>
+    <p>Campi nome, email, ricerca</p>
+    <input type="text" placeholder="Clicca qui e prova a incollare...">
+  </div>
+
+  <!-- Test 3: ContentEditable semplice -->
+  <div class="test-section">
+    <h2>3. ContentEditable Semplice <span class="status should-work">✅ DEVE FUNZIONARE</span></h2>
+    <p>Editor WYSIWYG base</p>
+    <div 
+      class="contenteditable" 
+      contenteditable="true" 
+      data-placeholder="Clicca qui e prova a incollare...">
+    </div>
+  </div>
+
+  <!-- Test 4: ContentEditable stile Gemini -->
+  <div class="test-section">
+    <h2>4. ContentEditable Complesso (stile Gemini) <span class="status should-work">✅ DEVE FUNZIONARE (v2.4)</span></h2>
+    <p>Simula editor AI come Gemini, ChatGPT</p>
+    <div 
+      class="contenteditable gemini-like" 
+      contenteditable="true" 
+      data-placeholder="Simula prompt Gemini - Clicca qui e prova...">
+    </div>
+  </div>
+
+  <!-- Test 5: ContentEditable con React events -->
+  <div class="test-section">
+    <h2>5. ContentEditable + Event Handlers (stile React) <span class="status should-work">✅ DEVE FUNZIONARE (v2.4)</span></h2>
+    <p>Editor con framework JavaScript</p>
+    <div 
+      id="react-like" 
+      class="contenteditable react-like" 
+      contenteditable="true" 
+      data-placeholder="Simula editor React - Clicca qui e prova...">
+    </div>
+  </div>
+
+  <!-- Test 6: Textarea con event listener custom -->
+  <div class="test-section">
+    <h2>6. Textarea con Event Validation <span class="status should-work">✅ DEVE FUNZIONARE</span></h2>
+    <p>Form con validazione JavaScript</p>
+    <textarea id="validated" placeholder="Form con validazione - prova a incollare..."></textarea>
+    <p id="validation-result"></p>
+  </div>
+
+  <!-- Test 7: Input disabled -->
+  <div class="test-section">
+    <h2>7. Input Disabled <span class="status wont-work">❌ NON PUÒ FUNZIONARE</span></h2>
+    <p>Campo disabilitato (corretto che non funzioni)</p>
+    <input type="text" placeholder="Campo disabilitato" disabled>
+  </div>
+
+  <!-- Test 8: Readonly -->
+  <div class="test-section">
+    <h2>8. Textarea Readonly <span class="status wont-work">❌ NON PUÒ FUNZIONARE</span></h2>
+    <p>Campo readonly (corretto che non funzioni)</p>
+    <textarea placeholder="Campo readonly" readonly></textarea>
+  </div>
+
+  <!-- Test 9: ContentEditable=false -->
+  <div class="test-section">
+    <h2>9. ContentEditable False <span class="status wont-work">❌ NON PUÒ FUNZIONARE</span></h2>
+    <p>Div non editabile</p>
+    <div 
+      class="contenteditable" 
+      contenteditable="false" 
+      style="background: #ffebee; border-color: #f44336;">
+      Questo div non è editabile
+    </div>
+  </div>
+
+  <script>
+    // Simula comportamento React/Vue con event interception
+    const reactLike = document.getElementById('react-like');
+    
+    reactLike.addEventListener('beforeinput', (e) => {
+      console.log('React-like: beforeinput event:', e.inputType);
+    });
+    
+    reactLike.addEventListener('input', (e) => {
+      console.log('React-like: input event:', e.inputType);
+      // Simula React re-render (ma non cancelliamo il contenuto)
+    });
+
+    // Validazione custom su textarea
+    const validated = document.getElementById('validated');
+    const validationResult = document.getElementById('validation-result');
+    
+    validated.addEventListener('input', (e) => {
+      const value = e.target.value;
+      if (value.length > 0) {
+        validationResult.textContent = `✅ Input ricevuto: ${value.length} caratteri`;
+        validationResult.style.color = '#4caf50';
+      }
+    });
+
+    // Log per debug
+    console.log('Test page loaded. Chrome extension can now be tested.');
+    console.log('All contentEditable elements:', document.querySelectorAll('[contenteditable="true"]'));
+  </script>
+
+  <div class="instructions" style="margin-top: 40px; background: #fff3cd; border-color: #ffc107;">
+    <h3>🐛 Se qualcosa non funziona:</h3>
+    <ol>
+      <li>Apri <strong>DevTools</strong> (F12)</li>
+      <li>Vai alla tab <strong>Console</strong></li>
+      <li>Riprova a incollare</li>
+      <li>Cerca messaggi che iniziano con <code>[Snippet]</code></li>
+      <li>Copia TUTTI i log e mandali allo sviluppatore</li>
+    </ol>
+    <p><strong>Logs da cercare:</strong></p>
+    <ul>
+      <li><code>[Snippet] Starting paste operation</code></li>
+      <li><code>[Snippet] Target element: {...}</code></li>
+      <li><code>[Snippet] Trying Clipboard API</code></li>
+      <li><code>[Snippet] Text copied to clipboard</code></li>
+      <li><code>[Snippet] Paste event dispatched</code></li>
+    </ul>
+  </div>
+</body>
+</html>

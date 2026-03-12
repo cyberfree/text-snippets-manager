@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    
+    body {
+      width: 550px;
+      height: 600px;
+      padding: 0;
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+      background: #f8f9fa;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 16px 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .header h1 {
+      margin: 0 0 8px 0;
+      font-size: 20px;
+      font-weight: 600;
+    }
+    
+    .header .subtitle {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+    
+    .search-bar {
+      padding: 12px 20px;
+      background: white;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .search-input {
+      width: 100%;
+      padding: 10px 36px 10px 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.2s;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23999" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>') no-repeat right 12px center;
+    }
+    
+    .search-input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    
+    .tabs {
+      display: flex;
+      padding: 0 20px;
+      background: white;
+      border-bottom: 2px solid #e0e0e0;
+      gap: 4px;
+    }
+    
+    .tab {
+      padding: 12px 20px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      color: #666;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+    }
+    
+    .tab:hover {
+      color: #333;
+      background: #f5f5f5;
+    }
+    
+    .tab.active {
+      color: #667eea;
+      border-bottom-color: #667eea;
+    }
+    
+    .content {
+      height: calc(600px - 180px);
+      overflow-y: auto;
+    }
+    
+    .tab-content {
+      display: none;
+      padding: 20px;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    /* Lista snippet */
+    .snippet-grid {
+      display: grid;
+      gap: 12px;
+    }
+    
+    .snippet-card {
+      background: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 14px;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    
+    .snippet-card:hover {
+      border-color: #667eea;
+      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+      transform: translateY(-1px);
+    }
+    
+    .snippet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    
+    .snippet-title {
+      font-weight: 600;
+      color: #333;
+      font-size: 14px;
+      flex: 1;
+    }
+    
+    .snippet-category {
+      background: #e8eaf6;
+      color: #5c6bc0;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+      margin-left: 8px;
+    }
+    
+    .snippet-preview {
+      color: #666;
+      font-size: 13px;
+      line-height: 1.4;
+      max-height: 40px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 10px;
+      white-space: pre-wrap;
+    }
+    
+    .snippet-stats {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 10px;
+      padding: 6px 0;
+      border-top: 1px solid #f0f0f0;
+      font-size: 11px;
+      color: #888;
+    }
+    
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 500;
+    }
+    
+    .stat-item:hover {
+      color: #667eea;
+      cursor: help;
+    }
+    
+    .snippet-actions {
+      display: flex;
+      gap: 6px;
+    }
+    
+    .btn-small {
+      padding: 6px 12px;
+      font-size: 12px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    
+    .btn-paste {
+      background: #667eea;
+      color: white;
+    }
+    
+    .btn-paste:hover {
+      background: #5568d3;
+    }
+    
+    .btn-edit {
+      background: #f5f5f5;
+      color: #333;
+    }
+    
+    .btn-edit:hover {
+      background: #e0e0e0;
+    }
+    
+    .btn-delete {
+      background: #ffebee;
+      color: #c62828;
+    }
+    
+    .btn-delete:hover {
+      background: #ffcdd2;
+    }
+    
+    /* Form aggiunta */
+    .form-group {
+      margin-bottom: 16px;
+    }
+    
+    .form-label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      font-size: 13px;
+      color: #333;
+    }
+    
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+    
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    
+    .form-textarea {
+      min-height: 120px;
+      resize: vertical;
+      font-family: 'Courier New', monospace;
+    }
+    
+    .char-counter {
+      font-size: 11px;
+      color: #888;
+      margin-top: 6px;
+      text-align: right;
+      font-weight: 500;
+    }
+    
+    .char-counter span {
+      color: #667eea;
+      font-weight: 600;
+    }
+    
+    .btn-primary {
+      width: 100%;
+      padding: 12px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .btn-primary:hover {
+      background: #5568d3;
+    }
+    
+    .btn-secondary {
+      width: 100%;
+      padding: 10px;
+      background: #f5f5f5;
+      color: #333;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+    
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+    
+    /* Impostazioni */
+    .settings-section {
+      background: white;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+    
+    .settings-title {
+      font-weight: 600;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+    
+    .category-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    
+    .category-tag {
+      background: #e8eaf6;
+      color: #5c6bc0;
+      padding: 6px 12px;
+      border-radius: 16px;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .category-tag button {
+      background: none;
+      border: none;
+      color: #5c6bc0;
+      cursor: pointer;
+      padding: 0;
+      font-size: 14px;
+      line-height: 1;
+    }
+    
+    .category-input-group {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .category-input-group input {
+      flex: 1;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+    }
+    
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+    
+    .stats {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    
+    .stat-card {
+      flex: 1;
+      background: white;
+      padding: 12px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: #667eea;
+    }
+    
+    .stat-label {
+      font-size: 11px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .export-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    
+    #editModal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+    }
+    
+    .modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 24px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+    
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #666;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>📝 Snippet Manager Pro</h1>
+    <div class="subtitle">Ctrl+Shift+V per aprire | Click per incollare</div>
+  </div>
+  
+  <div class="search-bar">
+    <input type="text" id="searchInput" class="search-input" placeholder="Cerca snippet...">
+  </div>
+  
+  <div class="tabs">
+    <button class="tab active" data-tab="list">📚 I Miei Snippet</button>
+    <button class="tab" data-tab="add">➕ Aggiungi</button>
+    <button class="tab" data-tab="settings">⚙️ Impostazioni</button>
+  </div>
+  
+  <div class="content">
+    <!-- Tab Lista -->
+    <div id="listTab" class="tab-content active">
+      <div id="snippetList" class="snippet-grid"></div>
+    </div>
+    
+    <!-- Tab Aggiungi -->
+    <div id="addTab" class="tab-content">
+      <form id="addForm">
+        <div class="form-group">
+          <label class="form-label">Titolo *</label>
+          <input type="text" id="snippetTitle" class="form-input" placeholder="es. Ricetta Patate al Forno" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Categoria</label>
+          <select id="snippetCategory" class="form-select">
+            <option value="Generale">Generale</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Testo *</label>
+          <textarea id="snippetText" class="form-textarea" placeholder="Inserisci il testo da salvare..." required></textarea>
+          <div class="char-counter" id="charCounter">
+            <span id="charCount">0</span> caratteri | 
+            <span id="wordCount">0</span> parole | 
+            <span id="lineCount">1</span> righe
+          </div>
+        </div>
+        
+        <button type="submit" class="btn-primary">💾 Salva Snippet</button>
+        <button type="button" id="clearForm" class="btn-secondary">🗑️ Pulisci Campi</button>
+      </form>
+    </div>
+    
+    <!-- Tab Impostazioni -->
+    <div id="settingsTab" class="tab-content">
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-value" id="totalSnippets">0</div>
+          <div class="stat-label">Snippet</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalCategories">0</div>
+          <div class="stat-label">Categorie</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalChars">0</div>
+          <div class="stat-label">Caratteri</div>
+        </div>
+      </div>
+      
+      <div class="settings-section">
+        <div class="settings-title">🏷️ Gestione Categorie</div>
+        <div id="categoryList" class="category-list"></div>
+        <div class="category-input-group">
+          <input type="text" id="newCategory" class="form-input" placeholder="Nuova categoria">
+          <button id="addCategory" class="btn-primary" style="width: auto; padding: 10px 20px;">Aggiungi</button>
+        </div>
+      </div>
+      
+      <div class="settings-section">
+        <div class="settings-title">💾 Backup & Ripristino</div>
+        <div class="export-buttons">
+          <button id="exportData" class="btn-primary">📥 Esporta JSON</button>
+          <button id="importData" class="btn-secondary">📤 Importa JSON</button>
+        </div>
+        <input type="file" id="importFile" accept=".json" style="display: none;">
+        <button id="clearAll" class="btn-secondary" style="margin-top: 12px; background: #ffebee; color: #c62828;">🗑️ Elimina Tutto</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal Modifica -->
+  <div id="editModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">✏️ Modifica Snippet</div>
+        <button class="modal-close" id="closeModal">×</button>
+      </div>
+      <form id="editForm">
+        <input type="hidden" id="editId">
+        <div class="form-group">
+          <label class="form-label">Titolo</label>
+          <input type="text" id="editTitle" class="form-input" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Categoria</label>
+          <select id="editCategory" class="form-select"></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Testo</label>
+          <textarea id="editText" class="form-textarea" required></textarea>
+          <div class="char-counter" id="editCharCounter">
+            <span id="editCharCount">0</span> caratteri | 
+            <span id="editWordCount">0</span> parole | 
+            <span id="editLineCount">1</span> righe
+          </div>
+        </div>
+        <button type="submit" class="btn-primary">💾 Salva Modifiche</button>
+      </form>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>
